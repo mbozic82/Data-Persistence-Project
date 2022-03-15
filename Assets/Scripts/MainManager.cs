@@ -14,9 +14,11 @@ public class MainManager : MonoBehaviour
     public GameObject GameOverText;
     
     private bool m_Started = false;
-    private int m_Points;
+    private long score;
     
     private bool m_GameOver = false;
+
+    private Player activePlayer;
 
     
     // Start is called before the first frame update
@@ -36,6 +38,10 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+
+        activePlayer = GameManager.Instance.PlayerManager.ActivePlayer;
+        score = 0;
+        AddPoint(0);
     }
 
     private void Update()
@@ -57,15 +63,33 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                score = 0;
+                AddPoint(0);
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
+            else if (Input.GetKeyDown(KeyCode.Q))
+            {
+                if (activePlayer != null)
+                {
+                    activePlayer.SetNewScore(score);
+                    GameManager.Instance.PlayerManager.SavePlayers();
+                }
+                SceneManager.LoadScene(0);
             }
         }
     }
 
     void AddPoint(int point)
     {
-        m_Points += point;
-        ScoreText.text = $"Score : {m_Points}";
+        score += point;
+        if (activePlayer != null)
+        {
+            ScoreText.text = $"{activePlayer.Name}: {score}";
+        }
+        else
+        {
+            ScoreText.text = $"Score: {score}";
+        }
     }
 
     public void GameOver()
