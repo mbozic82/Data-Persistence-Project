@@ -11,6 +11,7 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text BestScoreText;
     public GameObject GameOverText;
     
     private bool m_Started = false;
@@ -39,9 +40,22 @@ public class MainManager : MonoBehaviour
             }
         }
 
-        activePlayer = GameManager.Instance.PlayerManager.ActivePlayer;
+        RefreshScores();
+    }
+
+    private void RefreshScores()
+    {
+        PlayerManager pm = GameManager.Instance.PlayerManager;
+
+        activePlayer = pm.ActivePlayer;
         score = 0;
         AddPoint(0);
+
+        Player bestPlayer = pm.GetBestPlayer();
+        if (bestPlayer != null)
+        {
+            BestScoreText.text = $"BEST SCORE: {bestPlayer.GetNameAndScore()}";
+        }
     }
 
     private void Update()
@@ -61,19 +75,19 @@ public class MainManager : MonoBehaviour
         }
         else if (m_GameOver)
         {
+            if (activePlayer != null)
+            {
+                activePlayer.SetNewScore(score);
+                GameManager.Instance.PlayerManager.SavePlayers();
+            }
+
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                score = 0;
-                AddPoint(0);
+                RefreshScores();
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
             else if (Input.GetKeyDown(KeyCode.Q))
             {
-                if (activePlayer != null)
-                {
-                    activePlayer.SetNewScore(score);
-                    GameManager.Instance.PlayerManager.SavePlayers();
-                }
                 SceneManager.LoadScene(0);
             }
         }

@@ -151,4 +151,23 @@ public class PlayerManager
         ActivePlayer = Players[index];
         SavePlayers();
     }
+
+    public Player GetBestPlayer()
+    {
+        if (Players.Count == 0)
+        {
+            return null;
+        }
+
+        Player selected = Players[0];
+        foreach (Player player in Players)
+        {
+            if (player.Score > selected.Score)
+            {
+                selected = player;
+            }
+        }
+
+        return selected;
+    }
 }
