@@ -12,12 +12,12 @@ public class MainManager : MonoBehaviour
 
     public Text ScoreText;
     public Text BestScoreText;
-    public GameObject GameOverText;
+    public GameObject GameOverUI;
     
     private bool m_Started = false;
     private long score;
     
-    private bool m_GameOver = false;
+    private bool gameOver = false;
 
     private Player activePlayer;
 
@@ -73,7 +73,7 @@ public class MainManager : MonoBehaviour
                 Ball.AddForce(forceDir * 2.0f, ForceMode.VelocityChange);
             }
         }
-        else if (m_GameOver)
+        else if (gameOver)
         {
             if (activePlayer != null)
             {
@@ -108,7 +108,7 @@ public class MainManager : MonoBehaviour
 
     public void GameOver()
     {
-        m_GameOver = true;
-        GameOverText.SetActive(true);
+        gameOver = true;
+        GameOverUI.SetActive(true);
     }
 }
