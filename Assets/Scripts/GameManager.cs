@@ -9,6 +9,11 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public PlayerManager PlayerManager;
 
+    public Color Point1Color;
+    public Color Point2Color;
+    public Color Point3Color;
+
+
     private void Awake()
     {
         if (Instance != null)
@@ -22,6 +27,10 @@ public class GameManager : MonoBehaviour
 
         PlayerManager = new PlayerManager(Application.persistentDataPath);
         PlayerManager.LoadPlayers();
+
+        Point1Color = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+        Point2Color = new Color(0.5f, 0.5f, 0.65f, 1.0f);
+        Point3Color = new Color(0.5f, 0.5f, 0.80f, 1.0f);
     }
 
     // Update is called once per frame
