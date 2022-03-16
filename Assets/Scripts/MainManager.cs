@@ -78,7 +78,7 @@ public class MainManager : MonoBehaviour
             if (activePlayer != null)
             {
                 activePlayer.SetNewScore(score);
-                GameManager.Instance.PlayerManager.SavePlayers();
+                GameManager.Instance.PlayerManager.Save();
             }
 
             if (Input.GetKeyDown(KeyCode.Space))

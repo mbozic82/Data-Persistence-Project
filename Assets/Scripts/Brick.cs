@@ -9,6 +9,7 @@ public class Brick : MonoBehaviour
     public UnityEvent<int> onDestroyed;
     
     public int PointValue;
+    private int points;
 
     void Start()
     {
@@ -27,17 +28,30 @@ public class Brick : MonoBehaviour
                 block.SetColor("_BaseColor", GameManager.Instance.Point3Color);
                 break;
             default:
-                block.SetColor("_BaseColor", Color.red);
+                block.SetColor("_BaseColor", GameManager.Instance.Point1Color);
                 break;
         }
         renderer.SetPropertyBlock(block);
+
+        if (GameManager.Instance.PlayerManager.Difficulty == 0)
+        {
+            points = 1;
+        }
+        else
+        {
+            points = PointValue;
+            PointValue *= 2;
+        }
     }
 
     private void OnCollisionEnter(Collision other)
     {
-        onDestroyed.Invoke(PointValue);
-        
-        //slight delay to be sure the ball have time to bounce
-        Destroy(gameObject, 0.2f);
+        points--;
+        if (points == 0)
+        {
+            onDestroyed.Invoke(PointValue);
+            //slight delay to be sure the ball have time to bounce
+            Destroy(gameObject, 0.2f);
+        }
     }
 }

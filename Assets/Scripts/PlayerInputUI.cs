@@ -10,6 +10,8 @@ public class PlayerInputUI : MonoBehaviour
 {
     public Button buttonCreatePlayer;
     public Button buttonStart;
+    public Button buttonEasy;
+    public Button buttonHard;
     public TMP_InputField inputField;
     public Dropdown playerDropdownList;
     public TextMeshProUGUI bestScoreText;
@@ -20,11 +22,15 @@ public class PlayerInputUI : MonoBehaviour
     {
         buttonCreatePlayer.onClick.AddListener(ButtonCreatePlayerClicked);
         buttonStart.onClick.AddListener(ButtonStartClicked);
+        buttonEasy.onClick.AddListener(OnEasyButtonClicked);
+        buttonHard.onClick.AddListener(OnHardButtonClicked);
         playerDropdownList.onValueChanged.AddListener(delegate {
             OnPlayerSelected(playerDropdownList);
         });
 
         RefreshDropdownList();
+
+        SetDifficultyToButtons(GameManager.Instance.PlayerManager.Difficulty);
     }
 
     // Update is called once per frame
@@ -51,6 +57,30 @@ public class PlayerInputUI : MonoBehaviour
         GameManager.Instance.PlayerManager.SelectActivePlayer(dropdown.value);
     }
 
+    private void OnEasyButtonClicked()
+    {
+        SetDifficultyToButtons(0);
+        GameManager.Instance.PlayerManager.SetDifficulty(0);
+    }
+
+    private void OnHardButtonClicked()
+    {
+        SetDifficultyToButtons(1);
+        GameManager.Instance.PlayerManager.SetDifficulty(1);
+    }
+
+    private void SetDifficultyToButtons(int difficulty)
+    {
+        if (difficulty == 0)
+        {
+            buttonEasy.Select();
+        }
+        else
+        {
+            buttonHard.Select();
+        }
+    }
+
     private void SelectPlayerInDropdownList()
     {
         int index = GameManager.Instance.PlayerManager.GetActivePlayerIndex();
@@ -75,7 +105,7 @@ public class PlayerInputUI : MonoBehaviour
             Player best = GameManager.Instance.PlayerManager.GetBestPlayer();
             if (best != null)
             {
-                bestScoreText.text = best.GetNameAndScore();
+                bestScoreText.text = $"BEST SCORE: {best.GetNameAndScore()}";
             }
             else
             {

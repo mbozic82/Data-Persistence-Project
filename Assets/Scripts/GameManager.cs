@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         PlayerManager = new PlayerManager(Application.persistentDataPath);
-        PlayerManager.LoadPlayers();
+        PlayerManager.Load();
 
         Point1Color = new Color(0.5f, 0.5f, 0.5f, 1.0f);
         Point2Color = new Color(0.5f, 0.5f, 0.65f, 1.0f);
@@ -75,19 +75,20 @@ public class PlayerManager
 
     public List<Player> Players;
     public Player ActivePlayer;
+    public int Difficulty;
 
     public PlayerManager(string path)
     {
         savePath = path + PLAYERS_SAVE_FILE_NAME;
     }
 
-    public void SavePlayers()
+    public void Save()
     {
         string json = JsonUtility.ToJson(this);
         File.WriteAllText(savePath, json);
     }
 
-    public void LoadPlayers()
+    public void Load()
     {
         if (File.Exists(savePath))
         {
@@ -95,6 +96,7 @@ public class PlayerManager
             PlayerManager pm = JsonUtility.FromJson<PlayerManager>(json);
             Players = pm.Players;
             ActivePlayer = pm.ActivePlayer;
+            Difficulty = pm.Difficulty;
 
             if (Players == null)
             {
@@ -108,11 +110,17 @@ public class PlayerManager
         }
     }
 
+    public void SetDifficulty(int difficulty)
+    {
+        Difficulty = difficulty;
+        Save();
+    }
+
     public void DeletePlayers()
     {
         Players = new List<Player>();
         ActivePlayer = null;
-        SavePlayers();
+        Save();
     }
 
     public void SetActivePlayer(string name)
@@ -165,7 +173,7 @@ public class PlayerManager
             return;
         }
         ActivePlayer = Players[index];
-        SavePlayers();
+        Save();
     }
 
     public Player GetBestPlayer()
@@ -178,7 +186,7 @@ public class PlayerManager
         Player selected = Players[0];
         foreach (Player player in Players)
         {
-            if (player.Score > selected.Score)
+            if ((player.Score > selected.Score) && (player.Score > 0))
             {
                 selected = player;
             }
