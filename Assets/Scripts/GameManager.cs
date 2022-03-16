@@ -108,6 +108,13 @@ public class PlayerManager
         }
     }
 
+    public void DeletePlayers()
+    {
+        Players = new List<Player>();
+        ActivePlayer = null;
+        SavePlayers();
+    }
+
     public void SetActivePlayer(string name)
     {
         Player player = FindPlayer(name);

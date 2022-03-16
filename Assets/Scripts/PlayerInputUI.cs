@@ -12,6 +12,7 @@ public class PlayerInputUI : MonoBehaviour
     public Button buttonStart;
     public TMP_InputField inputField;
     public Dropdown playerDropdownList;
+    public TextMeshProUGUI bestScoreText;
 
 
     // Start is called before the first frame update
@@ -70,6 +71,16 @@ public class PlayerInputUI : MonoBehaviour
                 playerDropdownList.options.Add(new Dropdown.OptionData() { text = player.Name });
             }
             SelectPlayerInDropdownList();
+
+            Player best = GameManager.Instance.PlayerManager.GetBestPlayer();
+            if (best != null)
+            {
+                bestScoreText.text = best.GetNameAndScore();
+            }
+            else
+            {
+                bestScoreText.text = "BEST SCORE: 0";
+            }
         }
     }
 }
